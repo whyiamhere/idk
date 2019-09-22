@@ -1,0 +1,24 @@
+kind: pipeline
+name: tc_build
+
+platform:
+  os: linux
+  arch: amd64
+
+clone:
+  depth: 1
+
+steps:
+  - name: default
+    image: ubuntu:19.04
+    environment:
+      GITID:
+        from_secret: git_id
+      GITPWD:
+        from_secret: git_password
+    commands:
+      - apt-get update && apt-get install ca-certificates ccache cmake curl file gcc g++ git make ninja-build python3 texinfo zlib1g-dev gnupg2 bison flex libssl-dev bc -y
+      - git config --global user.email "wlootlxt123@gmail.com"
+      - git config --global user.name "Julian Liu"
+      - bash ./.ci/env-setup.sh
+      - bash ./.ci/build.sh
