@@ -2,7 +2,7 @@
 # Script to build a toolchain specialized for Proton Kernel development
 
 # Exit on error
-set -e
+#set -e
 
 # Function to show an informational message
 function msg() {
@@ -18,19 +18,7 @@ msg "Building LLVM..."
 	--shallow-clone \
 	--lto thin \
 	--build-stage1-only \
-	--install-stage1-only \
-	--incremental
-
-# Unset clang
-unset LD
-unset CC
-unset CXX
-
-# Build binutils
-msg "Building binutils..."
-./build-binutils.py \
-	--targets arm aarch64 \
-	--shallow-clone
+	--install-stage1-only
 
 # Remove unused products
 msg "Removing unused products..."
@@ -65,12 +53,6 @@ pushd /root/.ccache
 rm -rf .git
 git init && git add . && git commit -m "$rel_date" 1>/dev/null
 git push https://$GITID:$GITPWD@github.com/wloot/tc-dump.git HEAD:ccache -f
-popd
-
-pushd build/llvm
-rm -rf .git
-git init && git add . && git commit -m "$rel_date" 1>/dev/null
-git push https://$GITID:$GITPWD@github.com/wloot/tc-dump.git HEAD:build_llvm -f
 popd
 
 # Generate product name
